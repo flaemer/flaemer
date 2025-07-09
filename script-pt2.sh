@@ -1,35 +1,59 @@
-!/bin/bash
-# packages
-    git clone https://aur.archlinux.org/yay-bin.git
-    cd yay-bin
-    makepkg -si --noconfirm
-pacman -S --needed \
- bash-completion blueman bluez bluez-utils breeze brightnessctl btop chromium cliphist dosfstools efibootmgr \
-    fastfetch filelight flatpak gamemode gimp glfw gnome-disk-utility gnome-themes-extra gnu-free-fonts grim grub gvfs-mtp hyprland hyprlock \
-    ipset iw kate kid3 kitty krita lib32-gamemode lib32-mangohud libsixel libva-intel-driver \
-  lollypop ly mangohud mesa-utils mpv nautilus noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra \
-   obs-studio otf-font-awesome papirus-icon-theme pipewire-alsa pipewire-pulse playerctl polkit-gnome power-profiles-daemon \
-    python-pip qbittorrent qt5-wayland radeontop rofi rofimoji slurp steam swaync swww ttf-dejavu ttf-fira-code ttf-fira-sans \
-   ttf-firacode-nerd ttf-font-awesome ttf-hack ttf-liberation ttf-nerd-fonts-symbols ttf-opensans ttf-ubuntu-font-family vulkan-radeon \
-    vulkan-tools waybar wl-clipboard xbindkeys xclip xdg-desktop-portal-hyprland xf86-video-amdgpu \
-    xf86-video-intel yt-dlp
-# yay -S --noconfirm --needed adwaita-dark adwaita-qt5 ayugram-desktop-bin elyprismlauncher-bin heroic-games-launcher-bin libasound2-plugin-fftrate libgbinder libglibutil libwireplumber-4.0-compat mobydroid mobydroid-debug portproton protontricks protonup-qt-bin pwvucontrol python-gbinder python-vdf rofi-power-menu ventoy-bin ventoy-bin-debug vesktop-bin waydroid webcord yay yay-debug
+#!/bin/bash
 
+# Проверка на chroot (чтобы случайно не запустить вне chroot)
+if ! grep -q '/mnt' /proc/mounts; then
+    echo -e "\e[31mЭтот скрипт должен запускаться внутри chroot!\e[0m"
+    exit 1
+fi
 
-#grub
-echo "egg"
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
-grub-mkconfig -o /boot/grub/grub.cfg
+### 1. Настройка времени (UTC+7)
+echo -e "\e[32m[1] Настраиваю время (UTC+7)...\e[0m"
+timedatectl set-timezone Asia/Novosibirsk
+timedatectl set-ntp true
+hwclock --systohc --utc
 
-##памойка
-systemctl enable NetworkManager
+### 2. Включение multilib
+echo -e "\e[32m[2] Включаю multilib...\e[0m"
+sed -i '/^#\[multilib\]/,/^#Include/ s/^#//' /etc/pacman.conf
+pacman -Sy
 
-#конфиги
-REPO="https://github.com/flaemer/flaemer.git"  # Ссылка на репозиторий
-TMP_DIR="/home/$username/yaiko/"     # Временная папка
-CONFIG_SOURCE="$TMP_DIR/flaemer/.config" # Откуда копировать
-CONFIG_TARGET="/home/$USER/.config" # Куда копировать
-git clone https://github.com/flaemer/flaemer.git $TMP_DIR
-cp -r /home/$username/yaiko/.config /home/$username/
-#раслабление или что то там
-echo "бабах случится завтра я уверен в этом"
+### 3. Создание пользователя
+echo -e "\e[32m[3] Создаю пользователя...\e[0m"
+read -p "Введите имя пользователя: " username
+useradd -m -G wheel -s /bin/bash "$username"
+echo -e "\e[33mЗадайте пароль для $username:\e[0m"
+passwd "$username"
+
+### 4. Настройка sudo
+echo -e "\e[32m[4] Настраиваю sudo...\e[0m"
+sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
+
+### 5. Установка AUR-хелпера (yay)
+echo -e "\e[32m[5] Устанавливаю yay...\e[0m"
+pacman -S --noconfirm --needed go
+sudo -u "$username" bash -c 'git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin && cd /tmp/yay-bin && makepkg -si --noconfirm'
+
+### 6. Меню выбора пакетов
+echo -e "\e[36m\nВыберите вариант установки:\e[0m"
+echo "1) Минимальный набор (терминал)"
+echo "2) Рабочий стол (XFCE)"
+echo "3) Игровая конфигурация (Steam + Wine)"
+read -p "Ваш выбор (1-3): " choice
+
+case $choice in
+    1)
+        echo -e "\e[32mУстанавливаю терминальные утилиты...\e[0m"
+        pacman -S --noconfirm fastfetch
+        ;;
+    2)
+        echo -e "\e[32mУстанавливаю XFCE...\e[0m"
+        pacman -S --noconfirm btop fastfetch
+         ;;
+    3)
+        echo -e "\e[32mУстанавливаю Steam + Wine...\e[0m"
+        pacman -S --noconfirm steam wine-staging lutris vulkan-intel lib32-vulkan-intel
+        ;;
+esac
+
+echo -e "\e[32m\nУстановка завершена!\e[0m"
+echo -e "Войдите под пользователем \e[33m$username\e[0m и используйте \e[33myay\e[0m для AUR."
