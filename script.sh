@@ -23,6 +23,9 @@ echo "✅ Пользователь $username создан и добавлен в
 ### 4. Установка пакетов (pacman) ###
 echo "📦 Установка основных пакетов..."
 arch-chroot /mnt
+    git clone https://aur.archlinux.org/yay-bin.git
+    cd yay-bin
+    makepkg -si --noconfirm
 pacman -S --noconfirm --needed \
     adwaita-dark adwaita-qt5 bash-completion blueman bluez bluez-utils \
     breeze brightnessctl btop chromium cliphist dosfstools efibootmgr \
@@ -41,6 +44,15 @@ pacman -S --noconfirm --needed \
     vulkan-tools waybar waydroid wine-staging wireless-regdb wireless_tools \
     wl-clipboard xbindkeys xclip xdg-desktop-portal-hyprland xf86-video-amdgpu \
     xf86-video-intel yt-dlp
+echo "ну это хз гавнокод от дипсика надеюсь буде работать йау"
+yay -S --noconfirm --needed adwaita-dark adwaita-qt5 ayugram-desktop-bin elyprismlauncher-bin heroic-games-launcher-bin libasound2-plugin-fftrate libgbinder libglibutil libwireplumber-4.0-compat mobydroid mobydroid-debug portproton protontricks protonup-qt-bin pwvucontrol python-gbinder python-vdf rofi-power-menu ventoy-bin ventoy-bin-debug vesktop-bin waydroid webcord yay yay-debug
+
+#и зачем я это делаю то как будто арч каждый день переустанавливаю 
+USER="flaemer"                  # Твой пользователь
+REPO="https://github.com/flaemer/flaemer.git"  # Ссылка на репозиторий
+TMP_DIR="/home/$USER/yaiko"     # Временная папка
+CONFIG_SOURCE="$TMP_DIR/.config" # Откуда копировать
+CONFIG_TARGET="/home/$USER/.config" # Куда копировать
 
 ### 5. Установка загрузчика (GRUB) ###
 echo "🔌 Установка GRUB..."
