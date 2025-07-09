@@ -8,8 +8,7 @@ fi
 
 ### 1. Настройка системы ###
 echo "⚙️  Установка базовых пакетов..."
-pacman -Syu --noconfirm --needed \
-    base base-devel linux linux-firmware networkmanager nano git
+pacstrap /mnt base base-devel linux linux-firmware networkmanager nano git
 
 ### 2. Настройка пользователя ###
 read -p "Введите имя пользователя: " username
@@ -23,6 +22,7 @@ echo "✅ Пользователь $username создан и добавлен в
 
 ### 4. Установка пакетов (pacman) ###
 echo "📦 Установка основных пакетов..."
+arch-chroot /mnt
 pacman -S --noconfirm --needed \
     adwaita-dark adwaita-qt5 bash-completion blueman bluez bluez-utils \
     breeze brightnessctl btop chromium cliphist dosfstools efibootmgr \
