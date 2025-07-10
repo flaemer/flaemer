@@ -45,3 +45,12 @@ text
 ~~@._|@@_|||_@@|~||~~~~~~~~~~~~~
      `""") )"""`
 </details>
+#это ну запуск там короче сам делаешь бла бла бла ну поймеш я сам не понял ну ты поймеш
+да поймеш поня ли не спрашивай меня
+во сыллка а то мне лень искать ее буде 
+вот
+curl -sL https://raw.githubusercontent.com/flaemer/flaemer/main/script.sh | bash
+curl -sL https://raw.githubusercontent.com/flaemer/flaemer/main/script.sh | bash
+curl -sL https://raw.githubusercontent.com/flaemer/flaemer/main/script.sh | bash
+curl -sL https://raw.githubusercontent.com/flaemer/flaemer/main/script.sh | bash
+curl -sL https://raw.githubusercontent.com/flaemer/flaemer/main/script.sh | bash
