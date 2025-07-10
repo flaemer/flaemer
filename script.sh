@@ -1,78 +1,93 @@
 #!/bin/bash
-#наборчики пакетов
-amd_pc="idk"
-hp_notebook="idk"
-virtualbox="fastfetch btop"
-#base шооооооо яйки шо я делаю диск наверн
-read -p "boot razdel:" boot_efi
+# Arch Linux installation script (English version)
+
+# Package sets
+amd_pc="base-devel linux-headers reflector"
+hp_notebook="fastfetch"
+
+# Mount boot partition
+read -p "Enter boot partition (e.g., /dev/sda1): " boot_efi
 if [ -z "$boot_efi" ]; then
-echo "tebe nado razdel mraz"
+    echo "Boot partition not specified!"
     exit 1
 fi
+
 sudo mkdir -p /mnt/boot/efi
-sudo mount "$boot_efi" /mnt/boot/efi || { echo "xz ya neznayo"; exit 1; }
+sudo mount "$boot_efi" /mnt/boot/efi || { echo "Error mounting $boot_efi"; exit 1; }
+
+echo "Checking partitions:"
 lsblk | grep -v "loop"
-sleep 15 #zzzzz сон
-#это ну пакеты нада да
-echo -e "bazovie i fastfetch poxvastatsya"
-sudo pacstrap /mnt base base-devel linux linux-firmware nano git linux-headers reflector go
-#fstab?
-echo  "fstabchick"
-sleep 5
-sudo genfstab -U /mnt >> /mnt/etc/fstab
-#end?
-sudo arch-chroot /mnt <<EOF
-  #сам юзер
-  echo "user?"
-read -p "twoy imya: " username
-useradd -m -G wheel,audio,video,storage,optical -s /bin/bash "$username"
-echo "tvoy parol dlya $username"
-passwd "$username"
-#в субо добавляется
-sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
-#йау
-sudo -u "$username" bash -c 'git clone https://aur.archlinux.org/yay-bin.git ~/yay-bin && cd ~/yay-bin && makepkg -si --noconfirm'
-  # локалька
-  echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-  locale-gen
-  echo "LANG=en_US.UTF-8" > /etc/locale.conf
-  #пароль руту этому да
-  echo "pishi davai:"
-  passwd
-  #еще настройка
-  timedatectl set-timezone Asia/Novosibirsk
+sleep 3
 
-  #мультилиб
-  echo "[multilib]" >> /etc/pacman.conf
-echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
-  pacman -Sy
-  #это выборочная короче ноут или пк пакетики то какие будут
-  echo "1) notebook($hp_notebook)"
-echo "2) computer($amd_pc"
-echo "3) virtualbox($virtualbox"
+# Install base packages
+echo "Installing base packages..."
+sudo pacstrap /mnt base base-devel linux linux-firmware nano git linux-headers reflector go || { echo "Package installation failed"; exit 1; }
 
-read -p "hp or pc?: " choice
-  case $choice in
-    1)
-        echo -e "notebook"
-        pacman -S --noconfirm $hp_notebook;;
-    2)
-        echo "computer"
-        pacman -S --noconfirm $amd_pc;;
-    3)
-        echo "virtualbox"
-        pacman -S --noconfirm $virtualbox;;
-esac
-#config
-git clone https://github.com/flaemer/flaemer.git ~/repo_tmp
-sudo -u "$username" cp -rn ~/repo_tmp/.config /home/"$username"/
+# Generate fstab
+echo "Generating fstab..."
+sleep 2
+sudo genfstab -U /mnt >> /mnt/etc/fstab || { echo "Failed to generate fstab"; exit 1; }
 
-#что бы еще сюда добавить а ну эм блин это да ну лан это поставлю grub
-# grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
-#добавки
-# sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 nowatchdog"/' /etc/default/grub
-# echo "GRUB_COLOR_NORMAL=\"light-blue/black\"" >> /etc/default/grub
-# echo "GRUB_COLOR_HIGHLIGHT=\"light-cyan/blue\"" >> /etc/default/grub
-#сборка или шо то там ну грабчик
-# grub-mkconfig -o /boot/grub/grub.cfg
+# Chroot section
+sudo arch-chroot /mnt /bin/bash <<EOF
+    # Create user
+    echo "Creating user..."
+    read -p "Enter username: " username
+    useradd -m -G wheel,audio,video,storage,optical -s /bin/bash "\$username" || { echo "User creation failed"; exit 1; }
+    echo "Set password for \$username"
+    passwd "\$username"
+    
+    # Configure sudo
+    echo "Configuring sudo..."
+    sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers || { echo "Sudo configuration failed"; exit 1; }
+    
+    # Install yay
+    echo "Installing yay..."
+    sudo -u "\$username" bash -c 'git clone https://aur.archlinux.org/yay-bin.git ~/yay-bin && cd ~/yay-bin && makepkg -si --noconfirm' || { echo "Yay installation failed"; exit 1; }
+    
+    # Configure locale
+    echo "Setting up locale..."
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    locale-gen || { echo "Locale generation failed"; exit 1; }
+    echo "LANG=en_US.UTF-8" > /etc/locale.conf
+    
+    # Set root password
+    echo "Set root password:"
+    passwd || { echo "Failed to set root password"; exit 1; }
+    
+    # Configure timezone
+    timedatectl set-timezone Asia/Novosibirsk || { echo "Timezone configuration failed"; exit 1; }
+    
+    # Enable multilib
+    echo "Enabling multilib..."
+    echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
+    pacman -Sy || { echo "Repository update failed"; exit 1; }
+    
+    # Package selection
+    echo "Select system type:"
+    echo "1) Laptop ($hp_notebook)"
+    echo "2) Desktop ($amd_pc)"
+    
+    read -p "Your choice (1-2): " choice
+    case \$choice in
+        1)
+            echo "Installing laptop packages..."
+            pacman -S --noconfirm $hp_notebook;;
+        2)
+            echo "Installing desktop packages..."
+            pacman -S --noconfirm $amd_pc;;
+        *)
+            echo "Invalid choice, skipping additional packages";;
+    esac
+    
+    # Copy configs
+    echo "Copying configurations..."
+    sudo -u "\$username" bash -c 'git clone https://github.com/flaemer/flaemer.git ~/repo_tmp && cp -rn ~/repo_tmp/.config /home/'\$username'/' || echo "Warning: Failed to copy configs"
+    
+    echo "Base installation complete!"
 EOF
+
+# Post-install notes
+echo "After reboot remember to:"
+echo "1. Enable network: sudo systemctl enable NetworkManager"
+echo "2. Install graphical environment if needed"
