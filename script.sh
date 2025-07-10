@@ -9,19 +9,19 @@ if [ -z "$boot_efi" ]; then
     echo "tebe nado razdel mraz"
     exit 1
 fi
-mkdir -p /mnt/boot/efi
-mount "$boot_efi" /mnt/boot/efi || { echo "xz ya neznayo"; exit 1; }
+sudo mkdir -p /mnt/boot/efi
+sudo mount "$boot_efi" /mnt/boot/efi || { echo "xz ya neznayo"; exit 1; }
 lsblk | grep -v "loop"
 sleep 15 #zzzzz сон
 #это ну пакеты нада да
 echo -e "bazovie i fastfetch poxvastatsya"
-pacstrap /mnt base base-devel linux linux-firmware nano git linux-headers reflector go
+sudo pacstrap /mnt base base-devel linux linux-firmware nano git linux-headers reflector go
 #fstab?
 echo  "fstabchick"
 sleep 5
-genfstab -U /mnt >> /mnt/etc/fstab
+sudo genfstab -U /mnt >> /mnt/etc/fstab
 #end?
-arch-chroot /mnt <<EOF
+sudo arch-chroot /mnt <<EOF
   #сам юзер
   echo "user?"
 read -p "twoy imya: " username
@@ -31,8 +31,7 @@ passwd "$username"
 #в субо добавляется
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 #йау
--u "$username" bash -c 'git clone https://aur.archlinux.org/yay-bin.git ~/yay-bin && cd ~/yay-bin && makepkg -si --noconfirm'
-#не клонируется в home в папку /tmp пакет yay-bin или в директорию /tmp/yay-bin
+sudo -u "$username" bash -c 'git clone https://aur.archlinux.org/yay-bin.git ~/yay-bin && cd ~/yay-bin && makepkg -si --noconfirm'
   # локалька
   echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
   locale-gen
@@ -66,7 +65,7 @@ read -p "hp or pc?: " choice
 esac
 #config
 git clone https://github.com/flaemer/flaemer.git ~/repo_tmp
--u "$username" cp -rn ~/repo_tmp/.config /home/"$username"/
+sudo -u "$username" cp -rn ~/repo_tmp/.config /home/"$username"/
 
 #что бы еще сюда добавить а ну эм блин это да ну лан это поставлю grub
 # grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
