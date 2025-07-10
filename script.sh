@@ -4,11 +4,11 @@ amd_pc="idk"
 hp_notebook="idk"
 virtualbox="fastfetch btop"
 #base шооооооо яйки шо я делаю диск наверн
-read -p "boot razdel" boot_efi
-if [ -z "$boot_efi" ]; then
-    echo "tebe nado razdel mraz"
-    exit 1
-fi
+#read -p "boot razdel" boot_efi
+#if [ -z "$boot_efi" ]; then
+    #echo "tebe nado razdel mraz"
+    #exit 1
+#fi
 sudo mkdir -p /mnt/boot/efi
 sudo mount "$boot_efi" /mnt/boot/efi || { echo "xz ya neznayo"; exit 1; }
 lsblk | grep -v "loop"
