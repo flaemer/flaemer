@@ -4,7 +4,8 @@ reflector --country Russia --latest 5 --sort rate --save /etc/pacman.d/mirrorlis
 # Package sets
 amd_pc="btop"
 hp_notebook="fastfetch"
-
+read -p "your name: " USERNAME
+home="/home/$USERNAME"
 # Mount boot razdel
 read -p "Enter boot partition (e.g., /dev/sda1): " boot_efi
 [ -z "$boot_efi" ] && { echo "Boot partition not specified!"; exit 1; }
@@ -23,7 +24,6 @@ pacstrap /mnt base base-devel linux linux-firmware nano sudo git linux-headers r
 # Generate fstab
 echo "Generating fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab || { echo "Failed to generate fstab"; exit 1; }
-read -p "your name: " USERNAME
 # Package selection
 echo "Select system type:"
 echo "1) Laptop ($hp_notebook)"
@@ -31,7 +31,6 @@ echo "2) Desktop ($amd_pc)"
 
 read -p "Your choice (1-2): " choice
 
-# Chroot section
 arch-chroot /mnt /bin/bash <<EOF
 
 #user
@@ -41,8 +40,9 @@ echo "Configuring sudo..."
 echo "$USERNAME ALL=(ALL:ALL) ALL" >> /etc/sudoers || { echo "Failed to configure sudo"; exit 1; }
 
 #еще рандомное хз я заебался
-echo "[multilib] >> /etc/pacman.conf
+echo "[multilib]" >> /etc/pacman.conf
 echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
+pacman -Sy
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 locale-gen
@@ -52,7 +52,12 @@ mkdir /home/$USERNAME/yay-bin
 yay="yay-bin"
 git clone https://aur.archlinux.org/yay-bin.git ~/$yay &&
 cd ~/yay &&
-makepkg -si --noconfirm'
+makepkg -si --noconfirm
+
+# Copy configs
+echo "Copying configurations..."
+git clone https://github.com/flaemer/flaemer.git $home &&
+echo "installed?"
     
 #PACKAGES
 case $choice in
@@ -60,11 +65,4 @@ case $choice in
     2) pacman -S  $amd_pc;;
     *) echo "Invalid choice, skipping additional packages";;
 esac
-
-# Copy configs
-echo "Copying configurations..."
-sudo -u "$USERNAME" bash -c 'git clone https://github.com/flaemer/flaemer.git /tmp/repo_tmp &&
-    cp -rn /tmp/repo_tmp/.config /home/'"$USERNAME"'/' ||
-    echo "Warning: Failed to copy configs"
-echo "Base installation complete!"
 EOF
