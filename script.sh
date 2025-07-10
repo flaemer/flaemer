@@ -8,6 +8,10 @@ amd_pc="btop"
 hp_notebook="grub efibootmgr os-prober hyprland rofi swaync lollypop arch-install-scripts radeontop chromium swww yt-dlp steam qbittorrent polkit-gnome playerctl obs-studio networkmanager mpv ly krita kitty kid3 kate gvfs-mtp grim hyprlock flatpak filelight fastfetch efibootmgr grub btop blueman bluez mesa mesa-utils vulkan-radeon lib32-mesa lib32-vulkan-radeon power-profiles-daemon slurp wl-clipboard pipewire pipewire-pulse wireplumber powertop xdg-desktop-portal-hyprland gnu-free-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-font-awesome papirus-icon-theme ttf-dejavu ttf-fira-code ttf-fira-sans ttf-firacode-nerd ttf-font-awesome ttf-hack ttf-liberation ttf-nerd-fonts-symbols ttf-opensans ttf-ubuntu-font-family gnome-disk-utility"
 read -p "your name: " USERNAME
 home="/home/$USERNAME"
+base_pkgs="base base-devel linux linux-firmware nano sudo git linux-headers reflector go"
+lvm_pkgs="lvm2 device-mapper"
+#read -p "lvm?" package_choice
+
 
 #разделы эти ну да
 
@@ -24,7 +28,6 @@ mkfs.ext4 "$home"
 mkdir -p /mnt/home
 mount "$home" /mnt/home || { echo "Error mounting $home"; exit 1; }
 
-
 #boot razdel
 read -p "Enter boot part  (e.g., /dev/sda1): " boot_efi
 [ -z "$boot_efi" ] && { echo "Boot partition not specified!"; exit 1; }
@@ -35,11 +38,12 @@ mount "$boot_efi" /mnt/boot/efi || { echo "Error mounting $boot_efi"; exit 1; }
 #lsblk for check
 lsblk | grep -v "loop"
 sleep 2
-
+pacstrap /mnt $base_pkgs $lvm_pkgs
 # Install base packages
-echo "Installing base packages..."
-pacstrap /mnt base base-devel linux linux-firmware nano sudo git linux-headers reflector go
-
+#case $package_choice in
+    #1) pacstrap /mnt $lvm_pkgs;;
+    #*) echo "skipping";;
+#esac
 # Generate fstab
 echo "Generating fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab || { echo "Failed to generate fstab"; exit 1; }
@@ -94,5 +98,5 @@ systemctl --user enable pipewire pipewire-pulse wireplumber
 systemctl enable power-profiles-daemon
 systemctl enable thermald
 
-esac
 EOF
+echo "ended"
