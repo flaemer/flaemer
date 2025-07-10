@@ -24,7 +24,6 @@ pacstrap /mnt base base-devel linux linux-firmware nano sudo git linux-headers r
 echo "Generating fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab || { echo "Failed to generate fstab"; exit 1; }
 read -p "your name: " USERNAME
-read -p "Your password:" UserPassword
 # Package selection
 echo "Select system type:"
 echo "1) Laptop ($hp_notebook)"
@@ -41,13 +40,19 @@ useradd -m -G "$GROUPS" -s /bin/bash "$USERNAME" 2>/dev/null
 echo "Configuring sudo..."
 echo "$USERNAME ALL=(ALL:ALL) ALL" >> /etc/sudoers || { echo "Failed to configure sudo"; exit 1; }
 
+#еще рандомное хз я заебался
+echo "[multilib] >> /etc/pacman.conf
+echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+locale-gen
+
 #yay bro
 mkdir /home/$USERNAME/yay-bin
-yay="/home/$USERNAME/yay-bin
-chown "$USERNAME:$USERNAME" "$yay" 
-sudo -u "$USERNAME" bash -c 'git clone https://aur.archlinux.org/yay-bin.git ~/$yay &&
-    cd ~/yay &&
-    makepkg -si --noconfirm'
+yay="yay-bin"
+git clone https://aur.archlinux.org/yay-bin.git ~/$yay &&
+cd ~/yay &&
+makepkg -si --noconfirm'
     
 #PACKAGES
 case $choice in
@@ -55,24 +60,6 @@ case $choice in
     2) pacman -S  $amd_pc;;
     *) echo "Invalid choice, skipping additional packages";;
 esac
-
-# Install yay
-echo "Installing yay..."
-sudo -u "$USERNAME" bash -c 'git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin &&
-    cd /tmp/yay-bin &&
-    makepkg -si --noconfirm' || { echo "Yay installation failed"; exit 1; }
-
-# Configure locale
-echo "Setting up locale..."
-echo "en_US.UTF-8 UTF-8" >> /mnt/etc/locale.gen
-locale-gen || { echo "Locale generation failed"; exit 1; }
-echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
-
-# Enable multilib
-echo "Enabling multilib..."
-sed -i '/^#\[multilib\]/{n;s/^#//;}' /etc/pacman.conf
-sed -i 's/^#\[multilib\]/\[multilib\]/' /etc/pacman.conf
-pacman -Sy || { echo "Repository update failed"; exit 1; }
 
 # Copy configs
 echo "Copying configurations..."
