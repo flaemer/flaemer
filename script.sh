@@ -4,15 +4,15 @@ amd_pc="idk"
 hp_notebook="idk"
 virtualbox="fastfetch btop"
 #base шооооооо яйки шо я делаю диск наверн
-read -p "boot razdel" boot_efi
-#if [ -z "$boot_efi" ]; then
-    #echo "tebe nado razdel mraz"
-    #exit 1
-#fi
-#sudo mkdir -p /mnt/boot/efi
-#sudo mount "$boot_efi" /mnt/boot/efi || { echo "xz ya neznayo"; exit 1; }
-#lsblk | grep -v "loop"
-#sleep 15 #zzzzz сон
+read -p "boot razdel:" boot_efi
+if [ -z "$boot_efi" ]; then
+echo "tebe nado razdel mraz"
+    exit 1
+fi
+sudo mkdir -p /mnt/boot/efi
+sudo mount "$boot_efi" /mnt/boot/efi || { echo "xz ya neznayo"; exit 1; }
+lsblk | grep -v "loop"
+sleep 15 #zzzzz сон
 #это ну пакеты нада да
 echo -e "bazovie i fastfetch poxvastatsya"
 sudo pacstrap /mnt base base-devel linux linux-firmware nano git linux-headers reflector go
