@@ -2,6 +2,7 @@
 #наборчики пакетов
 amd_pc="idk"
 hp_notebook="idk"
+virtualbox="fastfetch btop"
 #base шооооооо яйки шо я делаю диск наверн
 read -p "boot razdel" boot_efi
 if [ -z "$boot_efi" ]; then
@@ -49,6 +50,8 @@ echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
   #это выборочная короче ноут или пк пакетики то какие будут
   echo "1) notebook($hp_notebook)"
 echo "2) computer($amd_pc"
+echo "3) virtualbox($virtualbox"
+
 read -p "hp or pc?: " choice
   case $choice in
     1)
@@ -57,13 +60,16 @@ read -p "hp or pc?: " choice
     2)
         echo "computer"
         pacman -S --noconfirm $amd_pc;;
+    3)
+        echo "virtualbox"
+        pacman -S --noconfirm $virtualbox;;
 esac
 #что бы еще сюда добавить а ну эм блин это да ну лан это поставлю grub
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
+# grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
 #добавки
-sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 nowatchdog"/' /etc/default/grub
-echo "GRUB_COLOR_NORMAL=\"light-blue/black\"" >> /etc/default/grub
-echo "GRUB_COLOR_HIGHLIGHT=\"light-cyan/blue\"" >> /etc/default/grub
+# sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 nowatchdog"/' /etc/default/grub
+# echo "GRUB_COLOR_NORMAL=\"light-blue/black\"" >> /etc/default/grub
+# echo "GRUB_COLOR_HIGHLIGHT=\"light-cyan/blue\"" >> /etc/default/grub
 #сборка или шо то там ну грабчик
-grub-mkconfig -o /boot/grub/grub.cfg
+# grub-mkconfig -o /boot/grub/grub.cfg
 EOF
