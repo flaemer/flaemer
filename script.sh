@@ -31,7 +31,7 @@ passwd "$username"
 #в субо добавляется
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 #йау
-sudo -u "$username" bash -c 'git clone https://aur.archlinux.org/yay-bin.git ~/yay-bin && cd ~/yay-bin && makepkg -si --noconfirm'
+-u "$username" bash -c 'git clone https://aur.archlinux.org/yay-bin.git ~/yay-bin && cd ~/yay-bin && makepkg -si --noconfirm'
 #не клонируется в home в папку /tmp пакет yay-bin или в директорию /tmp/yay-bin
   # локалька
   echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
@@ -64,6 +64,10 @@ read -p "hp or pc?: " choice
         echo "virtualbox"
         pacman -S --noconfirm $virtualbox;;
 esac
+#config
+git clone https://github.com/flaemer/flaemer.git ~/repo_tmp
+-u "$username" cp -rn ~/repo_tmp/.config /home/"$username"/
+
 #что бы еще сюда добавить а ну эм блин это да ну лан это поставлю grub
 # grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
 #добавки
