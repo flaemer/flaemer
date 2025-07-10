@@ -4,7 +4,7 @@ amd_pc="idk"
 hp_notebook="idk"
 virtualbox="fastfetch btop"
 #base шооооооо яйки шо я делаю диск наверн
-#read -p "boot razdel" boot_efi
+read -p "boot razdel" boot_efi
 #if [ -z "$boot_efi" ]; then
     #echo "tebe nado razdel mraz"
     #exit 1
