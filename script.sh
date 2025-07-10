@@ -18,8 +18,10 @@ sleep 3
 
 # Install base packages
 echo "Installing base packages..."
-pacstrap /mnt base base-devel linux linux-firmware nano sudo git linux-headers reflector go || {
-    echo "Package installation failed"; exit 1; }
+pacstrap -C /etc/pacman.conf -c /mnt \
+    base base-devel linux linux-firmware \
+    nano sudo git linux-headers reflector go \
+    --needed --cachedir=/var/cache/pacman/pkg
 
 # Generate fstab
 echo "Generating fstab..."
@@ -27,11 +29,20 @@ genfstab -U /mnt >> /mnt/etc/fstab || { echo "Failed to generate fstab"; exit 1;
 
 # Chroot section
 arch-chroot /mnt /bin/bash <<'EOF'
-# Create user
-read -p "Enter username: " username
-useradd -m -G wheel -s /bin/bash "$username" || { echo "User creation failed"; exit 1; }
-passwd "$username"
 
+# Явно запрашиваем имя пользователя ПЕРЕД chroot
+echo "your nama:"
+read username
+
+# Проверяем, что имя не пустое
+[ -z "$username" ] && { echo "paste something"; exit 1; }
+
+# Создаём пользователя
+useradd -m -G wheel -s /bin/bash "$username" || { echo "error user add "; exit 1; }
+
+# Устанавливаем пароль
+echo "Установите пароль для $username:"
+passwd "$username" || { echo "Ошибка установки пароля"; exit 1; }
 # Configure sudo
 echo "Configuring sudo..."
 echo "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers || { echo "Failed to configure sudo"; exit 1; }
@@ -82,4 +93,3 @@ sudo -u "$username" bash -c 'git clone https://github.com/flaemer/flaemer.git /t
 
 echo "Base installation complete!"
 EOF
-
