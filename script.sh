@@ -24,7 +24,7 @@ pacstrap /mnt base base-devel linux linux-firmware nano sudo git linux-headers r
 echo "Generating fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab || { echo "Failed to generate fstab"; exit 1; }
 read -p "your name: " USERNAME
-
+read -p "Your password:" UserPassword
 # Package selection
 echo "Select system type:"
 echo "1) Laptop ($hp_notebook)"
@@ -38,14 +38,17 @@ arch-chroot /mnt /bin/bash <<EOF
 #user
 GROUPS="wheel,audio,video,storage"
 useradd -m -G "$GROUPS" -s /bin/bash "$USERNAME" 2>/dev/null
-passwd "$USERNAME"
 echo "Configuring sudo..."
-echo "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers || { echo "Failed to configure sudo"; exit 1; }
+echo "$USERNAME ALL=(ALL:ALL) ALL" >> /etc/sudoers || { echo "Failed to configure sudo"; exit 1; }
 
-#root passwor
-echo "Set root password:"
-passwd || { echo "Failed to set root password"; exit 1; }
-
+#yay bro
+mkdir /home/$USERNAME/yay-bin
+yay="/home/$USERNAME/yay-bin
+chown "$USERNAME:$USERNAME" "$yay" 
+sudo -u "$USERNAME" bash -c 'git clone https://aur.archlinux.org/yay-bin.git ~/$yay &&
+    cd ~/yay &&
+    makepkg -si --noconfirm'
+    
 #PACKAGES
 case $choice in
     1) pacman -S $hp_notebook;;
@@ -61,14 +64,9 @@ sudo -u "$USERNAME" bash -c 'git clone https://aur.archlinux.org/yay-bin.git /tm
 
 # Configure locale
 echo "Setting up locale..."
-echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+echo "en_US.UTF-8 UTF-8" >> /mnt/etc/locale.gen
 locale-gen || { echo "Locale generation failed"; exit 1; }
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
-
-
-# Configure timezone
-ln -sf /usr/share/zoneinfo/Asia/Novosibirsk /etc/localtime
-hwclock --systohc
+echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
 
 # Enable multilib
 echo "Enabling multilib..."
