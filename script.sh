@@ -94,11 +94,11 @@ echo "LANG=en_US.UTF-8" > /etc/locale.conf
 locale-gen
 
 #yay bro
-mkdir /home/$USERNAME/yay-bin
-yay="yay-bin"
-git clone https://aur.archlinux.org/yay-bin.git ~/$yay &&
-cd ~/yay &&
-makepkg -si --noconfirm
+#mkdir /home/$USERNAME/yay-bin
+#yay="yay-bin"
+#git clone https://aur.archlinux.org/yay-bin.git ~/$yay &&
+#cd ~/yay &&
+#makepkg -si --noconfirm
 
 #PACKAGES
 case $choice in
@@ -118,6 +118,6 @@ systemctl enable bluetooth
 systemctl --user enable pipewire pipewire-pulse wireplumber
 systemctl enable power-profiles-daemon
 systemctl enable thermald
-
+esac
 EOF
 echo "ended"
