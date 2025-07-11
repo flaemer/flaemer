@@ -53,7 +53,7 @@ mkdir -p /mnt/home
 mount "$home" /mnt/home || { echo "Error mounting $home"; exit 1; }
 
 #boot
-mkfs.vfat -F32 "$boot"
+mkfs.vfat -F32 "$boot_efi"
 mkdir -p /mnt/boot/efi
 mount "$boot_efi" /mnt/boot/efi || { echo "Error mounting $boot_efi"; exit 1; }
 
@@ -76,6 +76,11 @@ echo "1) Laptop"
 echo "2) Desktop"
 read -p "Your choice (1-2): " choice
 
+#это ну локале гей
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+locale-gen
+
 #chroot часть
 arch-chroot /mnt /bin/bash <<EOF
 
@@ -89,23 +94,13 @@ echo "$USERNAME ALL=(ALL:ALL) ALL" >> /etc/sudoers || { echo "Failed to configur
 echo "[multilib]" >> /etc/pacman.conf
 echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 pacman -Sy
-echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
-locale-gen
-
-#yay bro
-#mkdir /home/$USERNAME/yay-bin
-#yay="yay-bin"
-#git clone https://aur.archlinux.org/yay-bin.git ~/$yay &&
-#cd ~/yay &&
-#makepkg -si --noconfirm
 
 #PACKAGES
 case $choice in
     1) pacman -S --noconfirm $hp_notebook;;
     2) pacman -S --noconfirm $amd_pc;;
     *) echo "Invalid choice, skipping additional packages";;
-
+esac
 #grub памойка эта
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
 echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/default/grub
@@ -118,6 +113,4 @@ systemctl enable bluetooth
 systemctl --user enable pipewire pipewire-pulse wireplumber
 systemctl enable power-profiles-daemon
 systemctl enable thermald
-esac
 EOF
-echo "ended"
