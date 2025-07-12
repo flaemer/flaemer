@@ -17,8 +17,10 @@ confirm() {
 reflector --country Russia --latest 5 --sort rate --save /etc/pacman.d/mirrorlist
 
 # Packages for pc or laptop
-amd_pc="btop"
-hp_notebook="grub efibootmgr os-prober hyprland rofi swaync lollypop arch-install-scripts radeontop chromium swww yt-dlp steam qbittorrent polkit-gnome playerctl obs-studio networkmanager mpv ly krita kitty kid3 kate gvfs-mtp grim hyprlock flatpak filelight fastfetch efibootmgr grub btop blueman bluez mesa mesa-utils vulkan-radeon lib32-mesa lib32-vulkan-radeon tlp tlp-rdw slurp wl-clipboard pipewire pipewire-pulse wireplumber powertop xdg-desktop-portal-hyprland gnu-free-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-font-awesome papirus-icon-theme ttf-dejavu ttf-fira-code ttf-fira-sans ttf-firacode-nerd ttf-font-awesome ttf-hack ttf-liberation ttf-nerd-fonts-symbols ttf-opensans ttf-ubuntu-font-family gnome-disk-utility ntfs-3g"
+amd_pc="grub efibootmgr os-prober hyprland rofi swaync lollypop radeontop chromium swww yt-dlp steam qbittorrent polkit-gnome playerctl obs-studio networkmanager mpv ly krita kitty kid3 kate gvfs-mtp grim hyprlock flatpak filelight fastfetch efibootmgr grub btop blueman bluez mesa mesa-utils vulkan-radeon lib32-mesa lib32-vulkan-radeon amd-ucode slurp wl-clipboard pipewire pipewire-pulse wireplumber xdg-desktop-portal-hyprland gnu-free-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-font-awesome papirus-icon-theme ttf-dejavu ttf-fira-code ttf-fira-sans ttf-firacode-nerd ttf-font-awesome ttf-hack ttf-liberation ttf-nerd-fonts-symbols ttf-opensans ttf-ubuntu-font-family gnome-disk-utility ntfs-3g dbus gamemode lib32-gamemode lib32-mangohud mangohud"
+
+
+hp_notebook="grub efibootmgr os-prober hyprland rofi swaync lollypop arch-install-scripts radeontop chromium swww yt-dlp steam qbittorrent polkit-gnome playerctl obs-studio networkmanager mpv ly krita kitty kid3 kate gvfs-mtp grim hyprlock flatpak filelight fastfetch efibootmgr grub btop blueman bluez mesa mesa-utils vulkan-radeon lib32-mesa lib32-vulkan-radeon tlp tlp-rdw slurp wl-clipboard pipewire pipewire-pulse wireplumber powertop xdg-desktop-portal-hyprland gnu-free-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-font-awesome papirus-icon-theme ttf-dejavu ttf-fira-code ttf-fira-sans ttf-firacode-nerd ttf-font-awesome ttf-hack ttf-liberation ttf-nerd-fonts-symbols ttf-opensans ttf-ubuntu-font-family gnome-disk-utility ntfs-3g dbus gamemode lib32-gamemode lib32-mangohud mangohud"
 read -p "your name: " USERNAME
 home="/home/$USERNAME"
 base_pkgs="base base-devel linux linux-firmware nano sudo git linux-headers reflector go"
@@ -113,4 +115,5 @@ systemctl enable bluetooth
 systemctl --user enable pipewire pipewire-pulse wireplumber
 systemctl enable power-profiles-daemon
 systemctl enable thermald
+systemctl enable gamemoded
 EOF
