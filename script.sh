@@ -32,15 +32,15 @@ lvm_pkgs="lvm2 device-mapper"
 lsblk -f | grep -v "loop"
 
 # Mount root razdel
-read -rp "Enter root part  (e.g., /dev/sda2): " root
+read -rp "Enter root part: " root
 [ -z "$root" ] && { echo "root partition not specified!"; exit 1; }
 
 #home razdel
-read -rp "Enter home  (e.g., /dev/sda3): " home
+read -rp "Enter home: " home
 [ -z "$home" ] && { echo "home partition not specified!"; exit 1; }
 
 #boot razdel
-read -rp "Enter boot part  (e.g., /dev/sda1): " boot_efi
+read -rp "Enter boot part: " boot_efi
 [ -z "$boot_efi" ] && { echo "Boot partition not specified!"; exit 1; }
 lsblk -f | grep -v "loop"
 confirm "it's bydet ydaleno vse data na'$root $home $boot_efi'"
@@ -62,7 +62,7 @@ mount "$boot_efi" /mnt/boot/efi || { echo "Error mounting $boot_efi"; exit 1; }
 
 #lsblk for check
 sleep 2
-pacstrap /mnt $base_pkgs $lvm_pkgs
+pacstrap /mnt $base_pkgs 
 # Install base packages
 #case $package_choice in
     #1) pacstrap /mnt $lvm_pkgs;;
@@ -99,7 +99,7 @@ pacman -Sy
 
 #PACKAGES
 case $choice in
-    1) pacman -S --noconfirm $hp_notebook;;
+    1) pacman -S --noconfirm $hp_notebook $lvm_pkgs;;
     2) pacman -S --noconfirm $amd_pc;;
     *) echo "Invalid choice, skipping additional packages";;
 esac
