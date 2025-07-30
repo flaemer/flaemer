@@ -13,6 +13,7 @@ imports =
   boot.loader.efi.canTouchEfiVariables = true;
 
 services.blueman.enable = true;
+
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
 security.polkit.enable = true;
 nixpkgs.config.allowUnfree = true;
@@ -27,6 +28,7 @@ environment.variables = {
  time.timeZone = "Asia/Krasnoyarsk";
 
   #services
+  services.displayManager.ly.enable = true;
   services.xserver.enable = true;
   services.printing.enable = true;
   services.pipewire = {
@@ -72,6 +74,17 @@ xdg-desktop-portal-wlr
 ];
 };
 #bluetooth
+  systemd.user.services.hyprpolkitagent = {
+    description = "Hyprland PolKit Agent";
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.hyprland}/bin/hyprpolkitagent";  # Путь к бинарнику
+      Restart = "on-failure";
+    };
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+  };
+  
 systemd.services.bluetooth = {
 wantedBy = [ "multi-user.target"];
 serviceConfig.Restart = "always";

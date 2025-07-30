@@ -105,6 +105,7 @@ fonts.packages = with pkgs; [
   mplus-outline-fonts.githubRelease
   dina-font
   proggyfonts
+  openmoji-color
 ];
 
 # Steam 

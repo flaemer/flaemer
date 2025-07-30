@@ -11,7 +11,6 @@
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = with config.boot.kernelPackages ; [ amneziawg ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/0f93672e-2b93-4a72-a725-b07d3633a82c";

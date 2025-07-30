@@ -8,8 +8,8 @@
         position = "top";
         
         modules-left = ["hyprland/workspaces""wlr/taskbar"];
-        modules-center = ["clock" "tray"];
-        modules-right = ["tray" "network" "wireplumber" "battery" "custom/power"];
+        modules-center = ["clock" "swaync"];
+        modules-right = ["tray" "network" "wireplumber" "battery"];
 
         # Конфиги модулей (как у вас)
         "wlr/taskbar" = {
@@ -20,6 +20,12 @@
           tooltip-format = "{title}";
         };
 
+ "swaync" = {
+        format = "";
+        on-click = "swaync-client -op"; 
+        tooltip = "Open notification center"; 
+      };
+      
         "hyprland/workspaces" = {
           on-click = "activate";
           active-only = false;
@@ -137,6 +143,9 @@ style = ''
     background-color: rgb(106, 123, 170);
   }
 
+ #swaync {
+    background-color: rgb(106, 123, 170);
+  }
   #taskbar {
     background-color: rgb(30, 30, 45);
   }
@@ -145,6 +154,9 @@ style = ''
     background-color: rgb(160, 129, 174);
   }
 
+ #tray {
+    background-color: rgb(160, 129, 174);
+  }
   #clock {
     background-color: rgb(203, 166, 247);
   }
