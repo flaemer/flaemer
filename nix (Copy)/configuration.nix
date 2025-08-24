@@ -48,8 +48,22 @@ fonts.fontDir.enable = true;
         flatpak.enable = true;
         xserver.enable = true;
         blueman.enable = true;
+        desktopManager.plasma6.enable = true;
+        displayManager.sddm.enable = true;
+        displayManager.sddm.wayland.enable = true;
 };
-  
+  environment.systemPackages = with pkgs;
+  [
+    kdePackages.kcalc # Calculator
+    kdePackages.kcharselect # Tool to select and copy special characters from all installed 
+    kdePackages.ksystemlog # KDE SystemLog Application
+    kdePackages.sddm-kcm # Configuration module  
+   kdePackages.partitionmanager # Optional Manage the disk devices, partitions and file systems on your computer
+    hardinfo2 # System information and benchmarks for Linux systems
+   haruna # Open source video player built with Qt/QML and libmpv
+    wayland-utils # Wayland utilities
+    wl-clipboard # Command-line copy/paste utilities for Wayland
+  ];
     programs = { 
         firefox.enable = true;
         mtr.enable = true;

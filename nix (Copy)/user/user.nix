@@ -1,5 +1,5 @@
   { pkgs, ...}: {
-  users.users.Diddy = {
+  users.users.diddy = {
      isNormalUser = true;
      extraGroups = [ "wheel" "audio" "video" "disk" "network" "input" "networkmanager" "plugdev"]; 
      packages = with pkgs; [
