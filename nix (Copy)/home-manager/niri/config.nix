@@ -1,0 +1,282 @@
+{ config, pkgs, lib, ... }:
+
+{
+  xdg.configFile."niri/config.kdl".text = ''
+input {
+    keyboard {
+        xkb {
+            layout "us,ru"
+            options "grp:alt_shift_toggle"
+        }
+        numlock
+    }
+  touchpad {
+        tap
+         drag-lock
+        natural-scroll
+         scroll-method "two-finger"
+        click-method "clickfinger"
+          left-handed
+         disabled-on-external-mouse
+    }
+}
+
+//Monitors да да это мониторы
+output "HDMI-A-1" {
+    mode "1920x1080@60"
+    scale 1
+    transform "normal"
+    position x=0 y=0
+}
+
+
+output "eDP-1" {
+    mode "1500x800@60"
+    scale 1    
+    transform "normal"
+    position x=-1366 y=0
+}
+
+
+layout {
+    gaps 16
+    center-focused-column "never"
+    preset-column-widths {
+
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    focus-ring {
+        width 2
+       active-color "#bac2de"
+        inactive-color "#bac2de"
+    }
+    struts {
+         left 0
+         right 0
+         top -8
+         bottom -10
+    }
+}
+//спавны ну там да
+prefer-no-csd
+spawn-at-startup "sh" "-c" "swww-daemon & swww img /home/flaemer/nix/home-manager/wallpaper/wall3"
+spawn-at-startup "xwayland-satellite"
+spawn-at-startup "eww daemon"
+spawn-at-startup "eww open bar"
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+//енвиронмент
+environment {
+    DISPLAY ":0"
+    QT_QPA_PLATFORM "wayland"
+}
+animations {
+
+    workspace-switch {
+      spring damping-ratio=1.0 stiffness=1000 epsilon=0.0001
+    }
+    window-open {
+        duration-ms 200
+        curve "ease-out-quad"
+    }
+
+    window-close {
+        duration-ms 200
+        curve "ease-out-quad"
+    }
+
+    horizontal-view-movement {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    window-movement {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    window-resize {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    config-notification-open-close {
+        spring damping-ratio=0.6 stiffness=1000 epsilon=0.001
+    }
+
+    screenshot-ui-open {
+        duration-ms 200
+        curve "ease-out-quad"
+    }
+
+    overview-open-close {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+}
+
+
+// виндоу рулес
+window-rule {
+
+        match app-id="kitty" title="nmtui"
+        match title="org.gnome.Nautilus"
+        match title="kitty" 
+        match app-id="com.saivert.pwvucontrol"
+        match app-id="blueman-manager"
+        open-floating true
+}
+
+window-rule {
+        match title="Firefox"       
+        match title="lite-xl"
+        open-maximized true
+}
+
+window-rule {
+        clip-to-geometry true
+        geometry-corner-radius 7
+}
+
+// бинды
+binds {
+    Mod+Shift+Slash { show-hotkey-overlay; }
+
+	  Mod+Return hotkey-overlay-title="Open a Terminal" { spawn "wezterm" "start" "fish"; }
+    Mod+Shift+Return hotkey-overlay-title="Run an Application: Fuzzel" { spawn "fuzzel"; }
+    Mod+E hotkey-overlay-title="Run a File Manager: Nautilus" { spawn "nautilus" "--new-window"; }
+    Mod+B hotkey-overlay-title="Run Firefox" { spawn "firefox"; } 
+    Alt+Q hotkey-overlay-title="Run Text Editor: Lite-xl " { spawn "lite-xl"; }
+    Mod+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
+
+
+   // audio fn buttons yes
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+    XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+    XF86AudioNext { spawn "playerctl" "next"; }
+    XF86AudioPlay  { spawn "playerctl" "play-pause"; }
+    XF86AudioPrev  { spawn "playerctl" "previous"; }
+    XF86MonBrightnessUp { spawn "brightnessctl" "set" "5%+"; }
+    XF86MonBrightnessDown { spawn "brightnessctl" "set" "5%-"; }
+
+
+    //non fn buttons da da 
+     mod+shift+ctrl+Page_Up allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+     mod+shift+ctrl+Page_Down allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+     mod+ctrl+End allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+     mod+shift+Page_Up { spawn "playerctl" "next"; }
+     mod+shift+End { spawn "playerctl" "play-pause"; }
+     mod+shift+Page_Down { spawn "playerctl" "previous"; }
+    
+    Mod+Tab repeat=true { toggle-overview; }
+    Mod+Q { close-window; }
+
+    Mod+Left  { focus-column-left; }
+    Mod+Down  { focus-window-down; }
+    Mod+Up    { focus-window-up; }
+    Mod+Right { focus-column-right; }
+
+    Mod+Ctrl+Down  { move-window-down; }
+    Mod+Ctrl+Left  { move-column-left; }
+    Mod+Ctrl+Up    { move-window-up; }
+    Mod+Ctrl+Right { move-column-right; }
+
+    Mod+Home { focus-column-first; }
+    Mod+End  { focus-column-last; }
+    Mod+alt+Home { move-column-to-first; }
+    Mod+alt+End  { move-column-to-last; }
+
+    Mod+Shift+Left  { focus-monitor-left; }
+    Mod+Shift+Right { focus-monitor-right; }
+  
+    Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
+
+    Mod+Page_Down      { focus-workspace-down; }
+    Mod+Page_Up        { focus-workspace-up; }
+    Mod+alt+Page_Down { move-column-to-workspace-down; }
+    Mod+alt+Page_Up { move-column-to-workspace-up; }
+
+    alt+Shift+Page_Down { move-workspace-down; }
+    alt+Shift+Page_Up   { move-workspace-up; }
+
+
+    Mod+WheelScrollDown      cooldown-ms=80 { focus-workspace-down; }
+    Mod+WheelScrollUp        cooldown-ms=80 { focus-workspace-up; }
+       Mod+Ctrl+WheelScrollDown cooldown-ms=80 { move-column-to-workspace-down; }
+    Mod+Ctrl+WheelScrollUp   cooldown-ms=80 { move-column-to-workspace-up; }
+
+    Mod+WheelScrollRight      { focus-column-right; }
+    Mod+WheelScrollLeft       { focus-column-left; }
+    Mod+Ctrl+WheelScrollRight { move-column-right; }
+    Mod+Ctrl+WheelScrollLeft  { move-column-left; }
+
+    Mod+Shift+WheelScrollDown      { focus-column-right; }
+    Mod+Shift+WheelScrollUp        { focus-column-left; }
+    Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
+    Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
+
+
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+Shift+1 { move-column-to-workspace 1; }
+    Mod+Shift+2 { move-column-to-workspace 2; }
+    Mod+Shift+3 { move-column-to-workspace 3; }
+    Mod+Shift+4 { move-column-to-workspace 4; }
+    Mod+Shift+5 { move-column-to-workspace 5; }
+    Mod+Shift+6 { move-column-to-workspace 6; }
+    Mod+Shift+7 { move-column-to-workspace 7; }
+    Mod+Shift+8 { move-column-to-workspace 8; }
+    Mod+Shift+9 { move-column-to-workspace 9; }
+
+    Mod+BracketLeft  { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+    
+
+    Mod+R { switch-preset-column-width; }
+    Mod+Shift+R { switch-preset-window-height; }
+    Mod+Ctrl+R { reset-window-height; }
+    Mod+M { maximize-column; }
+    Mod+F { fullscreen-window; }
+
+    Mod+Ctrl+F { expand-column-to-available-width; }
+
+    Mod+C { center-column; }
+
+    // Center all fully visible columns on screen.
+    Mod+Ctrl+C { center-visible-columns; }
+
+    Mod+Minus { set-column-width "-5%"; }
+    Mod+Equal { set-column-width "+5%"; }
+
+    // Finer height adjustments when in column with other windows.
+    Mod+Shift+Minus { set-window-height "-5%"; }
+    Mod+Shift+Equal { set-window-height "+5%"; }
+
+    // Move the focused window between the floating and the tiling layout.
+    Mod+V       { toggle-window-floating; }
+    Mod+Shift+V { switch-focus-between-floating-and-tiling; }
+
+    // Toggle tabbed column display mode.
+    // Windows in this column will appear as vertical tabs,
+    // rather than stacked on top of each other.
+    Mod+W { toggle-column-tabbed-display; }
+
+    Print { screenshot; }
+    Shift+Print { screenshot-screen; }
+    Ctrl+Print { screenshot-window; }
+
+    Ctrl+Alt+Delete { quit; }
+    Mod+Shift+P { power-off-monitors; }
+}
+ 
+ 
+    '';
+}
+  

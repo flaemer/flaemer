@@ -5,6 +5,7 @@ imports =
     [
       ./hardware-configuration.nix    
       ./pkgs/packages.nix
+      #./pkgs/packages-notebook.nix
       ./services/pipewire.nix
       ./zapret-flymer/zapret.nix
       ./user/user.nix
@@ -14,7 +15,6 @@ imports =
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   security.polkit.enable = true;
   nixpkgs.config.allowUnfree = true;
-  
 fonts.fontDir.enable = true;
    
     boot.loader = {
@@ -26,13 +26,14 @@ fonts.fontDir.enable = true;
         NIXOS_OZONE_WL = "1"; 
         GDK_BACKEND = "wayland"; 
         SDL_VIDEODRIVER = "wayland"; 
+      #  VK_ICD_FILENAMES=/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json;
 };
 
     environment.variables = {
         LANG = "en_US.UTF-8";
         LC_ALL = "en_US.UTF-8";
         LC_CTYPE = "en_US.UTF-8";
-    };
+};
     
     networking = {
         hostName = "nixos"; 
@@ -41,30 +42,21 @@ fonts.fontDir.enable = true;
             enable = true;
             allowedTCPPorts = [ 5900 ];
             allowedUDPPorts = [ 5353 ]; 
+        };
 };
 
     services = {
         gvfs.enable = true;
+        printing.enable = true;
+        printing.webInterface = true;
+        displayManager.ly.enable = true;
         flatpak.enable = true;
         xserver.enable = true;
         blueman.enable = true;
-        desktopManager.plasma6.enable = true;
-        displayManager.sddm.enable = true;
-        displayManager.sddm.wayland.enable = true;
 };
-  environment.systemPackages = with pkgs;
-  [
-    kdePackages.kcalc # Calculator
-    kdePackages.kcharselect # Tool to select and copy special characters from all installed 
-    kdePackages.ksystemlog # KDE SystemLog Application
-    kdePackages.sddm-kcm # Configuration module  
-   kdePackages.partitionmanager # Optional Manage the disk devices, partitions and file systems on your computer
-    hardinfo2 # System information and benchmarks for Linux systems
-   haruna # Open source video player built with Qt/QML and libmpv
-    wayland-utils # Wayland utilities
-    wl-clipboard # Command-line copy/paste utilities for Wayland
-  ];
+  
     programs = { 
+        niri.enable = true;
         firefox.enable = true;
         mtr.enable = true;
 };
@@ -85,7 +77,9 @@ fonts.fontDir.enable = true;
        extraPortals = with pkgs; [
           xdg-desktop-portal-gtk
           xdg-desktop-portal-wlr
+          xdg-desktop-portal-gnome
         ];
 };  
  system.stateVersion = "25.05"; # Did you read the comment?
 }
+

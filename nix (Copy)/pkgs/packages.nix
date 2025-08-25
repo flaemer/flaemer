@@ -3,25 +3,39 @@
 
 
 environment.systemPackages = with pkgs; [
+feh
 home-manager
 wget
 git
 btop
 ydotool
+wirelesstools
 pamixer
 file-roller
 qbittorrent-enhanced
 yt-dlp
 
-rustdesk
 pciutils
 usbutils
 lm_sensors
 
-nautilus
 
-fastfetch 
-#poxvastati
+#это ну нири да да правда
+niri
+eww
+xwayland-satellite
+
+wayvnc
+
+#themes bro
+adwaita-qt
+arc-theme
+papirus-icon-theme
+nautilus
+material-design-icons
+material-icons
+
+fastfetch #poxvastati
 
 
 #internetik
@@ -33,6 +47,7 @@ zapret
 
 
 lite-xl
+#кнопачки медиа там
 playerctl
 wireplumber
 
@@ -41,12 +56,19 @@ lollypop
 obs-studio
 mpv
 
+#программы ну для вм всяких
+fuzzel
+
 #терминал и терминальное
+kitty
 wezterm
 wl-clipboard
 polkit
+swww
+cliphist
 nix-prefetch-github
 
+hyprlock
 
 #гамес ого какая кнопочка №№№ № № № №№ №№№  
 prismlauncher
@@ -69,11 +91,14 @@ winetricks
   clinfo
   radeontop
   libva-utils
+  vdpauinfo
+  libvdpau-va-gl
   libva
   mesa
+  
+pwvucontrol
+python314
 ffmpeg
-
-#КалДЕ
 ];
 fonts.packages = with pkgs; [
         noto-fonts
