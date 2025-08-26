@@ -5,9 +5,10 @@
 	font.size = 12;
 	
 	font.name = "Monaco";	
-	
+
 	settings = {
 			shell = "bash";
+				confirm_os_window_close = "0";
 		window_margin_width = 10;
 		foreground = "#f8f8f2";
 		background =  "#101010";

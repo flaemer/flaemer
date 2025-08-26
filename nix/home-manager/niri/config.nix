@@ -1,7 +1,6 @@
 { config, pkgs, lib, ... }:
 
 {
-  # Создаём конфиг для Niri в ~/.config/niri/config.kdl
   xdg.configFile."niri/config.kdl".text = ''
 input {
     keyboard {
@@ -11,24 +10,33 @@ input {
         }
         numlock
     }
-
+  touchpad {
+        tap
+         drag-lock
+        natural-scroll
+         scroll-method "two-finger"
+        click-method "clickfinger"
+          left-handed
+         disabled-on-external-mouse
+    }
 }
-
 
 //Monitors да да это мониторы
-output "eDP-1" {
-    mode "1366x766@60"
-    scale 1    
-    transform "normal"
-    position x=0 y=0
-}
-
 output "HDMI-A-1" {
     mode "1920x1080@60"
     scale 1
     transform "normal"
-    position x=-1920 y=0
+    position x=0 y=0
 }
+
+
+output "eDP-1" {
+    mode "1500x800@60"
+    scale 1    
+    transform "normal"
+    position x=-1366 y=0
+}
+
 
 layout {
     gaps 16
@@ -42,47 +50,40 @@ layout {
 
     focus-ring {
         width 2
-       active-color "#7fc8ff"
-        inactive-color "#505050"
+       active-color "#bac2de"
+        inactive-color "#bac2de"
     }
     struts {
-         left -12
+         left 0
          right 0
-         top -4
-         bottom -4
+         top -8
+         bottom -10
     }
 }
 //спавны ну там да
 prefer-no-csd
-spawn-at-startup "waybar"
-spawn-at-startup "sh" "-c" "swww-daemon & swww img /home/flaemer/nix/home-manager/wallpaper/donda_wall2.webp"
+spawn-at-startup "sh" "-c" "swww-daemon & swww img /home/flaemer/nix/home-manager/wallpaper/wall3"
 spawn-at-startup "xwayland-satellite"
-
+spawn-at-startup "eww daemon"
+spawn-at-startup "eww open bar"
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 //енвиронмент
 environment {
     DISPLAY ":0"
     QT_QPA_PLATFORM "wayland"
 }
-
-cursor {
-    xcursor-theme "breeze_cursors"
-    xcursor-size 12
-
-    hide-when-typing
-    hide-after-inactive-ms 1000
-}
 animations {
+
     workspace-switch {
-        spring damping-ratio=1.0 stiffness=300 epsilon=0.0001
+      spring damping-ratio=1.0 stiffness=1000 epsilon=0.0001
     }
     window-open {
-        duration-ms 350
-        curve "ease-out-cubic"
+        duration-ms 200
+        curve "ease-out-quad"
     }
 
     window-close {
-        duration-ms 350
+        duration-ms 200
         curve "ease-out-quad"
     }
 
@@ -117,48 +118,56 @@ animations {
 window-rule {
 
         match app-id="kitty" title="nmtui"
-        match title="Nautilus"
+        match title="org.gnome.Nautilus"
+        match title="kitty" 
         match app-id="com.saivert.pwvucontrol"
         match app-id="blueman-manager"
         open-floating true
 }
 
 window-rule {
-        match title="Firefox"
+        match title="Firefox"       
         match title="lite-xl"
         open-maximized true
 }
 
 window-rule {
         clip-to-geometry true
-        geometry-corner-radius 16
+        geometry-corner-radius 7
 }
 
 // бинды
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
-    Mod+Return hotkey-overlay-title="Open a Terminal" { spawn "kitty"; }
+	  Mod+Return hotkey-overlay-title="Open a Terminal" { spawn "wezterm" "start" "fish"; }
     Mod+Shift+Return hotkey-overlay-title="Run an Application: Fuzzel" { spawn "fuzzel"; }
     Mod+E hotkey-overlay-title="Run a File Manager: Nautilus" { spawn "nautilus" "--new-window"; }
     Mod+B hotkey-overlay-title="Run Firefox" { spawn "firefox"; } 
     Alt+Q hotkey-overlay-title="Run Text Editor: Lite-xl " { spawn "lite-xl"; }
-    Mod+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "hyprlock"; }
-    Mod+Ctrl+Q hotkey-overlay-title="Run Wlogout" { spawn "wlogout"; }
-    Mod+Ctrl+V hotkey-overlay-title="Clipboard" { spawn "sh" "-c" "cliphist list | fuzzel --dmenu --config /home/flaemer/.config/fuzzel/clipboard.ini | cliphist decode | wl-copy"; }
+    Mod+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
 
-    // audio fn buttons yes
+
+   // audio fn buttons yes
     XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
     XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
-    XF86AudioMicMute     allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
     XF86AudioNext { spawn "playerctl" "next"; }
     XF86AudioPlay  { spawn "playerctl" "play-pause"; }
     XF86AudioPrev  { spawn "playerctl" "previous"; }
     XF86MonBrightnessUp { spawn "brightnessctl" "set" "5%+"; }
     XF86MonBrightnessDown { spawn "brightnessctl" "set" "5%-"; }
-   
-    Mod+Tab repeat=false { toggle-overview; }
+
+
+    //non fn buttons da da 
+     mod+shift+ctrl+Page_Up allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+     mod+shift+ctrl+Page_Down allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+     mod+ctrl+End allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+     mod+shift+Page_Up { spawn "playerctl" "next"; }
+     mod+shift+End { spawn "playerctl" "play-pause"; }
+     mod+shift+Page_Down { spawn "playerctl" "previous"; }
+    
+    Mod+Tab repeat=true { toggle-overview; }
     Mod+Q { close-window; }
 
     Mod+Left  { focus-column-left; }
@@ -173,8 +182,8 @@ binds {
 
     Mod+Home { focus-column-first; }
     Mod+End  { focus-column-last; }
-    Mod+Ctrl+Home { move-column-to-first; }
-    Mod+Ctrl+End  { move-column-to-last; }
+    Mod+alt+Home { move-column-to-first; }
+    Mod+alt+End  { move-column-to-last; }
 
     Mod+Shift+Left  { focus-monitor-left; }
     Mod+Shift+Right { focus-monitor-right; }
@@ -184,16 +193,16 @@ binds {
 
     Mod+Page_Down      { focus-workspace-down; }
     Mod+Page_Up        { focus-workspace-up; }
-    Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
-    Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
+    Mod+alt+Page_Down { move-column-to-workspace-down; }
+    Mod+alt+Page_Up { move-column-to-workspace-up; }
 
-    Mod+Shift+Page_Down { move-workspace-down; }
-    Mod+Shift+Page_Up   { move-workspace-up; }
+    alt+Shift+Page_Down { move-workspace-down; }
+    alt+Shift+Page_Up   { move-workspace-up; }
 
 
     Mod+WheelScrollDown      cooldown-ms=80 { focus-workspace-down; }
     Mod+WheelScrollUp        cooldown-ms=80 { focus-workspace-up; }
-    Mod+Ctrl+WheelScrollDown cooldown-ms=80 { move-column-to-workspace-down; }
+       Mod+Ctrl+WheelScrollDown cooldown-ms=80 { move-column-to-workspace-down; }
     Mod+Ctrl+WheelScrollUp   cooldown-ms=80 { move-column-to-workspace-up; }
 
     Mod+WheelScrollRight      { focus-column-right; }
@@ -266,6 +275,7 @@ binds {
     Ctrl+Alt+Delete { quit; }
     Mod+Shift+P { power-off-monitors; }
 }
+ 
  
     '';
 }

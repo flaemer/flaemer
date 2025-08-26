@@ -9,16 +9,20 @@
 	imports = [
 		./home-manager/niri/config.nix
 		./home-manager/other/kitty.nix
-		./home-manager/other/waybar.nix
 		./home-manager/other/theme.nix
+		./home-manager/other/fuzzel.nix
 		./home-manager/other/fastfetch.nix
+
+		#./home-manager/eww/modules.nix
+		#./home-manager/eww/eww-scss.nix
+		#./home-manager/eww/eww.nix
 	];
   
-programs.bash = {
+programs.fish = {
 enable = true;
 shellAliases = 
 let
-	flakePath = "~/nix";
+	flakePath = "/home/flaemer/nix/";
 in {
 rebuild = "sudo nixos-rebuild switch -I nixos-config=/home/flaemer/nix/configuration.nix"; #ребилд системы
 home-switch = "home-manager switch --flake ${flakePath}"; #ребилд хоума ну замена чистка короче хоум менеджер
@@ -27,6 +31,7 @@ nix-shell = "nix-shell -p"; # никс шелл это
 nixos-update = "nixos-rebuild switch --upgrade"; # обнова
 nix-update = "sudo nix-channel --update && flatpak update --user"; # абнова никпгс и флатпак апсов
 fastfetch-minimal = "fastfetch --config /home/flaemer/.config/fastfetch/config-minimal.jsonc"; # минимал фаст фетч
+histgrep = "history | grep ";
 		};
 	};         
 }

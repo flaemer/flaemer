@@ -1,88 +1,85 @@
-
 { config, lib, pkgs, ... }:
  
 {
 imports =
     [
       ./hardware-configuration.nix    
-      ./packages.nix
-      ./zapret.nix
+      ./pkgs/packages.nix
+      ./pkgs/packages-notebook.nix
+      ./services/pipewire.nix
+      ./zapret-flymer/zapret.nix
+      ./user/user.nix
+      ./programs/steam.nix     
     ];
+      virtualisation.waydroid.enable = true;
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  security.polkit.enable = true;
+  nixpkgs.config.allowUnfree = true;
+fonts.fontDir.enable = true;
+   
+    boot.loader = {
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
+};
+
+    environment.sessionVariables = {
+        NIXOS_OZONE_WL = "1"; 
+        GDK_BACKEND = "wayland"; 
+        SDL_VIDEODRIVER = "wayland"; 
+      #  VK_ICD_FILENAMES=/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json;
+};
+
+    environment.variables = {
+        LANG = "en_US.UTF-8";
+        LC_ALL = "en_US.UTF-8";
+        LC_CTYPE = "en_US.UTF-8";
+};
     
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-programs.niri.enable = true;
-services.blueman.enable = true;
-nix.settings.experimental-features = [ "nix-command" "flakes" ];
-security.polkit.enable = true;
-nixpkgs.config.allowUnfree = true;
-services.flatpak.enable = true;
- networking.hostName = "nixos"; 
- networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
- time.timeZone = "Asia/Krasnoyarsk";
-
-  #services
-  services.displayManager.ly.enable = true;
-  services.xserver.enable = true;
-  services.printing.enable = true;
-  services.pipewire = {
-  enable = true;
-  pulse.enable = true;
- };
- services.gvfs.enable = true;
-
-  virtualisation.waydroid.enable = true;
- 
-  hardware.graphics = {
-    enable = true;
-     };
-
-# User     
-  users.users.flaemer = {
-     isNormalUser = true;
-     extraGroups = [ "wheel" "audio" "video" "disk" "network" "input" "networkmanager" "plugdev"]; 
-     packages = with pkgs; [
-       tree
-     ];
- };    
-  users.users.flymer = {
-     isNormalUser = true;
-     extraGroups = [ "wheel" "audio" "video" "disk" "network" "input" "networkmanager" "plugdev"]; 
-     packages = with pkgs; [
-       tree
-     ];
-   };
-
-# Enable 
- programs.firefox.enable = true;
-programs.waybar.enable = true;
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-   programs.mtr.enable = true;
-   programs.gnupg.agent = {
-     enable = true;
-     enableSSHSupport = true;
-   };
- hardware.bluetooth.powerOnBoot = true;
- hardware.bluetooth.enable = true;
-# Xdg portal idk
-xdg.portal = { 
-enable = true;
-wlr.enable = true;
-extraPortals = with pkgs; [
-xdg-desktop-portal-gtk
-xdg-desktop-portal-wlr
-xdg-desktop-portal-gnome
-];
+    networking = {
+        hostName = "nixos"; 
+        networkmanager.enable = true;  
+        firewall = {
+            enable = true;
+            allowedTCPPorts = [ 5900 ];
+            allowedUDPPorts = [ 5353 ]; 
+        };
 };
-#bluetooth
+
+    services = {
+        gvfs.enable = true;
+        printing.enable = true;
+        printing.webInterface = true;
+        displayManager.ly.enable = true;
+        flatpak.enable = true;
+        xserver.enable = true;
+        blueman.enable = true;
+};
   
-systemd.services.bluetooth = {
-wantedBy = [ "multi-user.target"];
-serviceConfig.Restart = "always";
+    programs = { 
+        niri.enable = true;
+        firefox.enable = true;
+        mtr.enable = true;
 };
- system.stateVersion = "25.05"; # Did you read the comment?
+   
+    programs.gnupg.agent = {
+        enable = true;
+        enableSSHSupport = true;
+};
 
- 
+    hardware = {
+       bluetooth.powerOnBoot = true;
+       bluetooth.enable = true;
+};
+
+    xdg.portal = { 
+       enable = true;
+       wlr.enable = true;
+       extraPortals = with pkgs; [
+          xdg-desktop-portal-gtk
+          xdg-desktop-portal-wlr
+          xdg-desktop-portal-gnome
+        ];
+};  
+ system.stateVersion = "25.05"; # Did you read the comment?
 }
+

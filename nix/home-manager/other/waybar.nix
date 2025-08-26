@@ -10,7 +10,7 @@
         
         modules-left = ["wlr/taskbar"];
         modules-center = ["clock"];
-        modules-right = ["tray" "wireplumber" "network" "network" "backlight" "bluetooth"];
+        modules-right = ["tray" "wireplumber" "network" "backlight" "bluetooth"];
 "bluetooth" = {
 on-click = "blueman-manager";
 format = "{status}";
@@ -34,7 +34,7 @@ tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
   max-length = 50;
 };
 
- wireplumber = {
+ "wireplumber" = {
     on-click = "pwvucontrol";
     format = "{volume}%";
     format-muted = "🔇";
@@ -47,6 +47,10 @@ tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
     on-click = "activate";
     on-click-right = "fullscreen";
     tooltip-format = "{title}";
+  };
+  "clock" = {
+    format = "{:%H\n%M\n%d\n%m\n%a}";
+    on-click = "gsimplecal";
   };
 };
 };
