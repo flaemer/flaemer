@@ -4,6 +4,7 @@
 
 environment.systemPackages = with pkgs; [
 feh
+polkit_gnome 
 home-manager
 wget
 git
@@ -35,7 +36,8 @@ nautilus
 material-design-icons
 material-icons
 
-fastfetch #poxvastati
+fastfetch 
+#poxvastati
 
 
 #internetik
@@ -97,7 +99,6 @@ winetricks
   mesa
   
 pwvucontrol
-python314
 ffmpeg
 ];
 fonts.packages = with pkgs; [

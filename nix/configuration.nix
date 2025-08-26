@@ -1,15 +1,14 @@
-{ config, lib, pkgs, ... }:
- 
-{
+{ config, lib, pkgs, ... }:{
 imports =
     [
       ./hardware-configuration.nix    
       ./pkgs/packages.nix
-      ./pkgs/packages-notebook.nix
-      ./services/pipewire.nix
+      #./pkgs/packages-notebook.nix
+      ./services/services.nix     
       ./zapret-flymer/zapret.nix
       ./user/user.nix
-      ./programs/steam.nix     
+      ./programs/programs.nix     
+      #./programs/notebook.nix 
     ];
       virtualisation.waydroid.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -45,27 +44,6 @@ fonts.fontDir.enable = true;
         };
 };
 
-    services = {
-        gvfs.enable = true;
-        printing.enable = true;
-        printing.webInterface = true;
-        displayManager.ly.enable = true;
-        flatpak.enable = true;
-        xserver.enable = true;
-        blueman.enable = true;
-};
-  
-    programs = { 
-        niri.enable = true;
-        firefox.enable = true;
-        mtr.enable = true;
-};
-   
-    programs.gnupg.agent = {
-        enable = true;
-        enableSSHSupport = true;
-};
-
     hardware = {
        bluetooth.powerOnBoot = true;
        bluetooth.enable = true;
@@ -80,6 +58,19 @@ fonts.fontDir.enable = true;
           xdg-desktop-portal-gnome
         ];
 };  
+systemd.user.services.polkit-gnome-authentication-agent-1 = {
+  description = "Polkit GNOME Authentication Agent";
+  wantedBy = [ "graphical-session.target" ];
+  wants = [ "graphical-session.target" ];
+  after = [ "graphical-session.target" ];
+  serviceConfig = {
+    Type = "simple";
+    ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+    Restart = "on-failure";
+    RestartSec = 1;
+    TimeoutStopSec = 10;
+  };
+};
  system.stateVersion = "25.05"; # Did you read the comment?
 }
 

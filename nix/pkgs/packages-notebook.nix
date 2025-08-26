@@ -13,6 +13,7 @@ intel-gpu-tools
 intel-compute-runtime
 intel-media-driver
 
+python314
 qemu
 ];
 }
