@@ -44,6 +44,7 @@ $crust: #11111b;
 * {
   padding: 0px;
   margin: 1px;
+  all: unset;
 }
 
 window {
@@ -53,6 +54,8 @@ window {
 }
 .time {
   background: #000008;
+  padding: 6px;
+  margin: 0px;
   border-radius: 16px;
   font-family: 'Nunito', sans-serif;
   font-size: 14px;
@@ -95,6 +98,8 @@ window {
   background: #000008;
   border-radius: 16px;
   font-family: 'Nunito', sans-serif;
+  padding: 6px;
+  margin: 0px;
   font-size: 14px;
   font-weight: 500; /* Regular */
 }
@@ -119,10 +124,13 @@ window {
   }
 }
   button {
-    margin: 0px 1px;
+    margin: 0px 0px;
+    color: #ffffff;
   }
+  
+  
   .occupied {
-    color: $grey;
+    color: $cyan;
   }
 
   .focused {
@@ -139,6 +147,8 @@ window {
     font-size: 10px;
 //  font-family: "Font Awesome 5 Free Regular"
   }
+
+
       '';
 }
 
