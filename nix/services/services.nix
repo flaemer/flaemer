@@ -3,16 +3,11 @@
     gvfs.enable = true;
     devmon.enable = true; 
     udisks2.enable = true;
-    printing.enable = true;
-    printing.webInterface = true;
     displayManager.ly.enable = true;
     flatpak.enable = true;
-    xserver.enable = true;
-    blueman.enable = true;
-
-    
+    blueman.enable = true; 
   };
-  
+
   services.pipewire = {
     enable = true;
     alsa = { enable = true; support32Bit = true; };
@@ -38,4 +33,19 @@
       "94-no-upmixing".stream.properties.channelmix.upmix = false;
     };
   };
+
+systemd.user.services.polkit-gnome-authentication-agent-1 = {
+  description = "Polkit GNOME Authentication Agent";
+  wantedBy = [ "graphical-session.target" ];
+  wants = [ "graphical-session.target" ];
+  after = [ "graphical-session.target" ];
+  serviceConfig = {
+    Type = "simple";
+    ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+    Restart = "on-failure";
+    RestartSec = 1;
+    TimeoutStopSec = 10;
+  };
+};
+
 }

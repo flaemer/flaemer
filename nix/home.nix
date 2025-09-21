@@ -9,10 +9,10 @@
 	imports = [
 		./home-manager/niri/config.nix
 		./home-manager/other/kitty.nix
-		./home-manager/other/theme.nix
 		./home-manager/other/fuzzel.nix
 		./home-manager/other/fastfetch.nix
-
+    ./home-manager/other/themes.nix
+    
 		./home-manager/eww/modules.nix
 		./home-manager/eww/eww-scss.nix
 		./home-manager/eww/eww.nix

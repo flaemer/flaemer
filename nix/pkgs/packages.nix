@@ -3,55 +3,32 @@
 
 
 environment.systemPackages = with pkgs; [
-feh
+
+
 polkit_gnome 
-home-manager
-wget
-git
-btop
-ydotool
-wirelesstools
 pamixer
 file-roller
-qbittorrent-enhanced
-yt-dlp
 
-pciutils
-usbutils
-lm_sensors
-
-
-#это ну нири да да правда
 niri
 eww
 xwayland-satellite
-
-wayvnc
 
 #themes bro
 adwaita-qt
 arc-theme
 papirus-icon-theme
-nautilus
 material-design-icons
 material-icons
 
-fastfetch 
-#poxvastati
-
+nautilus
 
 #internetik
-firefox
+chromium
 vesktop
 materialgram
 
-zapret
-
-
 lite-xl
-#кнопачки медиа там
-playerctl
-wireplumber
+
 
 #это ну работа не фейк да да у меня нет ее ну медиа музыка видео там
 lollypop
@@ -63,57 +40,27 @@ fuzzel
 
 #терминал и терминальное
 kitty
-wezterm
 wl-clipboard
-polkit
 swww
 cliphist
-nix-prefetch-github
 
 hyprlock
 
 #гамес ого какая кнопочка №№№ № № № №№ №№№  
-prismlauncher
-protontricks
 gamemode 
 mangohud
 gamescope
 steam-run
+
+ # возможно сделать отдельным конфигом под спорные ибо ну спорные много зависимостей и ненужны
+ # типо зачем мне вайн на пк где мне лишь зайти в игру и все надо бы порт протон или чего нить найти
+ # или скрипт под протон 
+libsForQt5.kdenlive
 wineWowPackages.waylandFull
-winetricks
+winetrick
 
-  networkmanager
-  blueman
-  bluez
-  bluez-tools
-
-  
-  vulkan-tools
-  glxinfo
-  clinfo
-  radeontop
-  libva-utils
-  vdpauinfo
-  libvdpau-va-gl
-  libva
-  mesa
-  
+blueman
 pwvucontrol
-ffmpeg
 ];
-fonts.packages = with pkgs; [
-        noto-fonts
-        noto-fonts-cjk-sans
-        noto-fonts-emoji
-        liberation_ttf
-        fira-code
-        fira-code-symbols
-        mplus-outline-fonts.githubRelease
-        dina-font
-        proggyfonts
-        meslo-lgs-nf
-        nerd-fonts.symbols-only
-  ];
-
 }   
 

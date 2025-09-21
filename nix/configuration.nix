@@ -2,20 +2,30 @@
 imports =
     [
       ./hardware-configuration.nix    
+      
       ./pkgs/packages.nix
-      #./pkgs/packages-notebook.nix
+      ./pkgs/packages-fonts.nix               #fonts btw
+      ./pkgs/packages-cli.nix
+
+      ./pkgs/packages-cli-notebook.nix
+      ./pkgs/packages-notebook.nix
+
+#      ./services/printer.nix
       ./services/services.nix     
-      ./zapret-flymer/zapret.nix
+      ./zapret-flymer/zapret.nix     #zapret btw
       ./user/user.nix
       ./programs/programs.nix     
-      #./programs/notebook.nix 
     ];
-      virtualisation.waydroid.enable = true;
+  
+#  virtualisation.waydroid.enable = true;                                                                                                                                                                                                                                                                                                                                               #maybe idk i don't need this because it's loading long and tiktok working im lazy i dont need but you can be here because i allow this because i can't make normal config i need did something where is bloat like that other .nix file but i too lazy to make other .nix file and i need loggin in to github or something maybe use usb flash or other disk or local server yea i need make local server for files like videos or this because i don't will need github because i don't have peoples who will fix my config or help and i don't need this is my config ya dolboyob i need stop write
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   security.polkit.enable = true;
   nixpkgs.config.allowUnfree = true;
+
 fonts.fontDir.enable = true;
-   
     boot.loader = {
         systemd-boot.enable = true;
         efi.canTouchEfiVariables = true;
@@ -54,23 +64,9 @@ fonts.fontDir.enable = true;
        wlr.enable = true;
        extraPortals = with pkgs; [
           xdg-desktop-portal-gtk
-          xdg-desktop-portal-wlr
           xdg-desktop-portal-gnome
         ];
 };  
-systemd.user.services.polkit-gnome-authentication-agent-1 = {
-  description = "Polkit GNOME Authentication Agent";
-  wantedBy = [ "graphical-session.target" ];
-  wants = [ "graphical-session.target" ];
-  after = [ "graphical-session.target" ];
-  serviceConfig = {
-    Type = "simple";
-    ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-    Restart = "on-failure";
-    RestartSec = 1;
-    TimeoutStopSec = 10;
-  };
-};
  system.stateVersion = "25.05"; # Did you read the comment?
 }
 

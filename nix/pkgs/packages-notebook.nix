@@ -1,19 +1,16 @@
 { pkgs, ...}:{
 environment.systemPackages = with pkgs; [
-brightnessctl
 mcomix
-lmms
-vinegar
-
-libsForQt5.kdenlive
-libreoffice-qt6
+#libreoffice-qt6
 krita
+
+python314
+qemu
 
 intel-gpu-tools
 intel-compute-runtime
 intel-media-driver
 
-python314
-qemu
+gthumb
 ];
 }

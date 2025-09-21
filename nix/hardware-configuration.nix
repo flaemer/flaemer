@@ -11,22 +11,26 @@
 
 #Мой СУКА мой РАЗДЕЛ он МОЙ блять все разделы МОИ
 
-  fileSystems."/" = {
-      device = "/dev/disk/by-uuid/0f93672e-2b93-4a72-a725-b07d3633a82c";
-      fsType = "ext4";
-};
 
-  fileSystems."/boot" = {
-      device = "/dev/disk/by-uuid/071D-C3AA";
+  fileSystems."/" =
+    { 
+      device = "/dev/disk/by-uuid/7b2ec879-ae14-4b1e-81b1-3fe30d2e0ef9"; # UUID для sda2
+      fsType = "ext4";
+    };
+
+  fileSystems."/boot" =
+    { 
+      device = "/dev/disk/by-uuid/B5B3-25D2"; # UUID для sda3
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
-};
+    };
 
-  fileSystems."/home" = {  
-      device = "/dev/disk/by-uuid/296ee9eb-594e-48cc-9eea-d6da12561361";
+  fileSystems."/home" =
+    { 
+      device = "/dev/disk/by-uuid/296ee9eb-594e-48cc-9eea-d6da12561361"; # UUID для sda1
       fsType = "ext4";
-};
-
+    };
+    
   fileSystems."/mnt/files_V1" = {
       device = "/dev/vg1/files_V1";
       fsType = "ext4";

@@ -45,73 +45,87 @@ $crust: #11111b;
   padding: 0px;
   margin: 1px;
   all: unset;
+  border-radius: 25px;
+  background-color: #000
 }
+
+
 
 window {
   background: $idk;
  border-radius: 8px;
+   background-color: transparent;
   padding: 0px;
 }
 .time {
   background: #000008;
   padding: 6px;
   margin: 0px;
-  border-radius: 16px;
   font-family: 'Nunito', sans-serif;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 500; /* Regular */
   
 }
 .player {
   background: #000008;
-  border-radius: 16px;
   margin: 9px;
   padding: 6px;
   font-family: 'Nunito', sans-serif;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 500; /* Regular */
 }
 .battery {
   background: #000008;
-  border-radius: 16px;
   font-family: "Symbols Nerd Font Mono";
-  font-size: 13px;
+  font-size: 18px;
+}
+
+.ping {
+  background: #000008;
+    padding: 6px;
+  margin: 0px;
+  font-family: "Symbols Nerd Font Mono";
+  font-size: 18px;
+}
+.battery {
+  background: #000008;
+  font-family: "Symbols Nerd Font Mono";
+  font-size: 18px;
 }
 
 .speaker {
   background: #000008;
-  border-radius: 16px;
   margin: 9px;
   padding: 6px;
   font-family: "Symbols Nerd Font Mono";
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 500; /* Regular */
 }
 .tray {
   background: #000008;
-  border-radius: 16px;
+     background-color: #000008;
   padding: 3px;
   font-family: 'Nunito', sans-serif;
   font-weight: 500; /* Regular */
 }
 .date {
   background: #000008;
-  border-radius: 16px;
   font-family: 'Nunito', sans-serif;
   padding: 6px;
   margin: 0px;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 500; /* Regular */
 }
 .bar {
   font-family: "Noto Sans";
-  font-size: 13px;
+  font-size: 17px;
+     background-color: transparent;
   margin: 4 0px;
   
 }
 .tooltip {
   background-color: $cyan;
-  color: $black;
+
   border-radius: 12px;
   font-size: 13px;
   padding: 7px 8px;
@@ -139,14 +153,25 @@ window {
 
   .urgent {
     color: $red; 
-  }
+      }
+    .separator-label {
+     background-color: transparent;
+     color: transparent;
+     }
 
+     .separator{
+     background-color: transparent;
+     color: transparent; 
+    }
   .empty {
     padding-top: 2px;
-    color: $foreground-alt;
+    background-color: $red;
     font-size: 10px;
 //  font-family: "Font Awesome 5 Free Regular"
   }
+
+
+
 
 
       '';

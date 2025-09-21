@@ -9,33 +9,53 @@ input {
             options "grp:alt_shift_toggle"
         }
         numlock
-    }
-  touchpad {
+    }    
+    touchpad {
+        // off
         tap
-         drag-lock
+         dwt
+        // dwtp\
+        //I-O80Jm/g
+         drag true
+         // drag-lock
         natural-scroll
-         scroll-method "two-finger"
-        click-method "clickfinger"
-          left-handed
-         disabled-on-external-mouse
+         accel-speed 0.6
+        // accel-profile "flat"
+        // scroll-factor vertical=1.0 horizontal=-2.0
+         scroll-factor 1
+         scroll-method "edge"
+         scroll-button 273
+        // scroll-button-lock
+         tap-button-map "left-middle-right"
+         click-method "clickfinger"
+        // left-handed
+        // disabled-on-external-mouse
+        // middle-emulation
     }
 }
 
 //Monitors да да это мониторы
+
+
+output "eDP-1" {
+    mode "1366x766"
+    scale 0.85
+    background-color "#003300"
+    backdrop-color "#1F1717"
+    transform "normal"
+    focus-at-startup
+    position x=0 y=0
+}
+
 output "HDMI-A-1" {
     mode "1920x1080@60"
     scale 1
+        background-color "#003300"
+    backdrop-color "#1F1717"
     transform "normal"
     position x=0 y=0
 }
 
-
-output "eDP-1" {
-    mode "1500x800@60"
-    scale 1    
-    transform "normal"
-    position x=-1366 y=0
-}
 
 
 layout {
@@ -54,18 +74,17 @@ layout {
         inactive-color "#bac2de"
     }
     struts {
-         left 0
-         right 0
-         top -8
+         left -4
+         right 4
+         top -10
          bottom -10
     }
 }
 //спавны ну там да
 prefer-no-csd
-spawn-at-startup "sh" "-c" "swww-daemon & swww img /home/flaemer/nix/home-manager/wallpaper/wall3"
+spawn-at-startup "sh" "-c" "swww-daemon & swww img /home/flaemer/wallpaper/wolf.png"
 spawn-at-startup "xwayland-satellite"
 spawn-at-startup "eww daemon"
-spawn-at-startup "eww open bar"
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 //енвиронмент
 environment {
@@ -117,33 +136,39 @@ animations {
 // виндоу рулес
 window-rule {
 
-        match app-id="kitty" title="nmtui"
         match title="org.gnome.Nautilus"
-        match title="kitty" 
-        match app-id="com.saivert.pwvucontrol"
-        match app-id="blueman-manager"
         open-floating true
 }
 
 window-rule {
-        match title="Firefox"       
+        match title="chromium"       
+        match title="vesktop"
         match title="lite-xl"
+        match title="materialgram"
         open-maximized true
 }
 
 window-rule {
         clip-to-geometry true
-        geometry-corner-radius 7
+        geometry-corner-radius 6
 }
 
+window-rule {
+        match title="materialgram"
+}
+window-rule {
+        match is-active=false
+        opacity 0.85
+}
 // бинды
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
-	  Mod+Return hotkey-overlay-title="Open a Terminal" { spawn "wezterm" "start" "fish"; }
+	Mod+Return hotkey-overlay-title="Open a Terminal" { spawn "kitty" "fish"; }
     Mod+Shift+Return hotkey-overlay-title="Run an Application: Fuzzel" { spawn "fuzzel"; }
     Mod+E hotkey-overlay-title="Run a File Manager: Nautilus" { spawn "nautilus" "--new-window"; }
-    Mod+B hotkey-overlay-title="Run Firefox" { spawn "firefox"; } 
+    Mod+B hotkey-overlay-title="Run Chromium" { spawn "chromium"; } 
+    
     Alt+Q hotkey-overlay-title="Run Text Editor: Lite-xl " { spawn "lite-xl"; }
     Mod+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn "hyprlock"; }
 
@@ -160,26 +185,24 @@ binds {
 
 
     //non fn buttons da da 
-     mod+shift+ctrl+Page_Up allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
-     mod+shift+ctrl+Page_Down allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+     mod+ctrl+Page_Up allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+     mod+ctrl+Page_Down allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
      mod+ctrl+End allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
-     mod+shift+Page_Up { spawn "playerctl" "next"; }
+     mod+shift+Page_Down { spawn "playerctl" "next"; }
      mod+shift+End { spawn "playerctl" "play-pause"; }
-     mod+shift+Page_Down { spawn "playerctl" "previous"; }
+     mod+shift+Page_Up { spawn "playerctl" "previous"; }
     
     Mod+Tab repeat=true { toggle-overview; }
     Mod+Q { close-window; }
-
-    Mod+Left  { focus-column-left; }
-    Mod+Down  { focus-window-down; }
-    Mod+Up    { focus-window-up; }
-    Mod+Right { focus-column-right; }
+    
+    Alt+Down  { focus-window-down; }
+    Alt+Up    { focus-window-up; }
 
     Mod+Ctrl+Down  { move-window-down; }
     Mod+Ctrl+Left  { move-column-left; }
     Mod+Ctrl+Up    { move-window-up; }
     Mod+Ctrl+Right { move-column-right; }
-
+    Mod+Right { focus-column-right; }
     Mod+Home { focus-column-first; }
     Mod+End  { focus-column-last; }
     Mod+alt+Home { move-column-to-first; }
@@ -190,9 +213,9 @@ binds {
   
     Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
     Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
-
-    Mod+Page_Down      { focus-workspace-down; }
-    Mod+Page_Up        { focus-workspace-up; }
+    Mod+Left  { focus-column-left; }
+    Mod+Down      { focus-workspace-down; }
+    Mod+Up        { focus-workspace-up; }
     Mod+alt+Page_Down { move-column-to-workspace-down; }
     Mod+alt+Page_Up { move-column-to-workspace-up; }
 
@@ -215,7 +238,7 @@ binds {
     Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
     Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
 
-
+    
     Mod+1 { focus-workspace 1; }
     Mod+2 { focus-workspace 2; }
     Mod+3 { focus-workspace 3; }
@@ -275,6 +298,19 @@ binds {
     Ctrl+Alt+Delete { quit; }
     Mod+Shift+P { power-off-monitors; }
 }
+ gestures {
+    dnd-edge-view-scroll {
+        trigger-width 100
+        max-speed 3000
+    }
+}
+layer-rule {
+    match namespace="^notifications$"   
+    block-out-from "screencast"
+}
+layer-rule {
+
+}     
  
  
     '';
