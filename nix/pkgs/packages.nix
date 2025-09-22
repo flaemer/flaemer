@@ -9,6 +9,7 @@ polkit_gnome
 pamixer
 file-roller
 
+mako
 niri
 eww
 xwayland-satellite
@@ -57,7 +58,7 @@ steam-run
  # или скрипт под протон 
 libsForQt5.kdenlive
 wineWowPackages.waylandFull
-winetrick
+winetricks
 
 blueman
 pwvucontrol

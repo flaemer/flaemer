@@ -1,0 +1,119 @@
+;━━━━━ windows ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+ (defwindow bar 
+  :monitor 0
+  :stacking "fg" 
+  :exclusive true
+  :geometry (geometry :x 0 :y 0 :height "0px" :width "100%" :anchor "center top")
+  :focusable false
+  (bar :screen 0))
+
+(defwindow win0 
+ :monitor 0
+ :geometry (geometry :x 0 :y 0 :height "15px" :width "100%" :anchor "bottom right")
+ :stacking "fg" 
+ :exclusive true
+ :focusable false
+(bar0 :screen 0))
+
+;━━━━━ bars ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(defwidget bar [screen]
+(box :orientation "h"
+     :space-evenly false
+     :class "bar"
+     
+(box :halign "start"
+     :spacing 5
+     :space-evenly false
+     :hexpand true
+   (speaker))
+
+
+(box :halign "center"
+     :spacing 5
+   (date))
+
+
+      
+(box :halign "end"
+     :spacing 5
+     :hexpand true
+     :space-evenly false
+   (battery)
+   (nothing)
+   )))
+   
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget bar0 [screen]
+(box :orientation "h"
+     :space-evenly false
+     :class "bar"
+(box :halign "start"
+     :spacing 5
+     
+     :space-evenly false
+   (nothing)
+   (tray)
+   
+   )
+
+    
+(box :halign "end"
+     :spacing 7
+     :hexpand true
+     :space-evenly false
+   (player))))
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━    
+
+;idk
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(deflisten player_listen :initial '{"show": "no", "content": ""}' "./modules/player.sh")
+(defpoll date_poll :interval "1s" "date +%m:%d:%S/%Y/%H:%M")
+(defpoll battery_poll :interval "1s" "./modules/battery.sh")
+(defpoll speaker_poll :interval "0.3s" "./modules/speaker.sh")
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget tray []
+  (box :class "tray"
+    (systray :orientation "h" :icon-size 28 :spacing 0)))
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸    
+(defwidget icon-module [icon ?class ?visible]
+  (box :class "${class} icon-module"
+       :orientation "h"
+       :halign "end"
+       :space-evenly false
+       :visible {visible ?: true} ; because the argument is optional
+    (label :class "icon-module__icon" :text "${icon}")
+    (children)))
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget player []
+  (icon-module :class "player" :icon "" :visible {player_listen.show == "yes"}
+    (literal :content {player_listen.content})))
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget date []
+  (box :class "date"
+    (label :text date_poll)))
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget nothing []
+  (box :class "separator" :orientation "horizontal" :spacing 155 :space-evenly true
+    (label :text ".":class "separator-label")))
+  
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget speaker []
+  (icon-module :class "speaker" 
+                :icon {speaker_poll.icon}
+    (eventbox :onscroll `eww update speaker_poll="$(./modules/speaker.sh {})"`
+      (button :onclick "exec pwvucontrol)"
+        (label :text {speaker_poll.content})))))
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+(defwidget battery []
+  (box :class "battery"
+    (icon-module :class "battery-icon" :icon {battery_poll.icon}
+      (label :text {battery_poll.percentage}))))
+
+;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸

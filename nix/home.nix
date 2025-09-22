@@ -12,9 +12,7 @@
 		./home-manager/other/fuzzel.nix
 		./home-manager/other/fastfetch.nix
     ./home-manager/other/themes.nix
-    
-		./home-manager/eww/modules.nix
-		./home-manager/eww/eww-scss.nix
+  
 		./home-manager/eww/eww.nix
 	];
   
